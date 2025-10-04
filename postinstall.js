@@ -24,8 +24,8 @@ function postInstall() {
 ║  const guard = new TrialAbuseGuard();                            ║
 ║  const result = await guard.checkUser(email, ipAddress);         ║
 ║                                                                  ║
-║  📖 Documentation: https://github.com/yourusername/trial-abuse-guard ║
-║  🐛 Issues: https://github.com/yourusername/trial-abuse-guard/issues ║
+║  📖 Documentation: https://github.com/themacn/trial-abuse-guard ║
+║  🐛 Issues: https://github.com/themacn/trial-abuse-guard/issues ║
 ║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
     `);

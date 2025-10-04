@@ -197,9 +197,28 @@ Choose your integration path:
 ## 💡 Need Help?
 
 - 📖 [Documentation](./TROUBLESHOOTING.md)
-- 🐛 [Issues](https://github.com/yourusername/trial-abuse-guard/issues)
-- 💬 [Discussions](https://github.com/yourusername/trial-abuse-guard/discussions)
+- 🐛 [Issues](https://github.com/themacn/trial-abuse-guard/issues)
+- 💬 [Discussions](https://github.com/themacn/trial-abuse-guard/discussions)
 - 📧 Email: support@trial-abuse-guard.com
+
+## 🗣️ Also by the Creators: Jotchats
+
+<p align="center">
+  <img src="jotchats.ico" alt="Jotchats Logo" width="100">
+</p>
+
+Transform your web forms into engaging, AI-powered conversations with [Jotchats](https://jotchats.com). Instead of static fields, guide users through natural, full-screen dialogues that feel like chatting with a helpful assistant.
+
+**Why Jotchats?**
+- 🚀 **Higher Conversion Rates** - See significant improvements in response rates vs. traditional forms
+- 🎯 **Better Data Collection** - Collect more accurate, detailed information through conversational flows
+- 🎨 **Brand Integration** - Customize the experience to match your brand perfectly
+- 📊 **Smart Analytics** - Track engagement and optimize your forms
+- 🔗 **Easy Integration** - Embed seamlessly into websites, apps, or existing workflows
+
+Perfect for lead capture, onboarding, surveys, feedback, and more. Replace clunky forms with something that actually drives results!
+
+[Learn more about Jotchats](https://jotchats.com) | [Jotchats vs Typeform Comparison](https://jotchats.com/blogs/jotchats-vs-typeform-comparison)
 
 ---
 
