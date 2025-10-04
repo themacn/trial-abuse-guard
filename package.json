@@ -1,0 +1,51 @@
+{
+  "name": "trial-abuse-guard",
+  "version": "1.0.0",
+  "description": "A comprehensive npm package for preventing SaaS trial abuse through email similarity detection, temporary email blocking, IP analysis, and VPN detection",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/**/*.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "trial-abuse",
+    "fraud-detection",
+    "email-validation",
+    "ip-detection",
+    "vpn-detection",
+    "security",
+    "saas",
+    "authentication"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/trial-abuse-guard.git"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "validator": "^13.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/jest": "^29.5.0",
+    "@types/validator": "^13.11.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.50.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.2.0"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ]
+}
