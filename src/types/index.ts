@@ -11,6 +11,12 @@ export interface TrialAbuseConfig {
   vpnCheck?: boolean;
   /** Custom disposable email domains list */
   customDisposableDomains?: string[];
+  /** Enable automatic updates of temp email domains */
+  tempEmailAutoUpdate?: boolean;
+  /** Update interval for temp email domains (hours) */
+  tempEmailUpdateInterval?: number;
+  /** Local storage path for temp email domains */
+  tempEmailStoragePath?: string;
   /** API keys for external services */
   apiKeys?: {
     ipQualityScore?: string;

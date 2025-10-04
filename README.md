@@ -37,6 +37,114 @@ console.log(result.overall); // Risk score 0-100
 console.log(result.details); // Detailed explanation
 ```
 
+## 🗂️ Persistent Temp Email Domain Management
+
+The package automatically maintains and updates a persistent list of temporary email domains:
+
+```javascript
+// Automatic updates from multiple external sources
+const guard = new TrialAbuseGuard({
+  tempEmailAutoUpdate: true,        // Auto-update enabled (default)
+  tempEmailUpdateInterval: 24,      // Update every 24 hours
+  tempEmailStoragePath: './domains.json' // Custom storage location
+});
+
+// Add your own domains to the blacklist
+await guard.addTempEmailDomains(['suspicious.com', 'fake-trials.org']);
+
+// Remove domains if needed
+await guard.removeTempEmailDomains(['legit-domain.com']);
+
+// Get statistics
+const stats = guard.getTempEmailStats();
+console.log(`Tracking ${stats.totalDomains} temp email domains`);
+
+// Search domains
+const results = guard.searchTempEmailDomains('temp');
+
+// Export/Import domain lists
+await guard.exportTempEmailDomains('./backup.json');
+await guard.importTempEmailDomains('./custom-domains.txt');
+
+// Force update from external sources
+await guard.updateTempEmailDomains();
+```
+
+## 🔌 Easy Integration with NextAuth/Auth.js and Clerk
+
+The package provides seamless integration with popular authentication libraries:
+
+### NextAuth/Auth.js Integration
+
+```javascript
+import NextAuth from 'next-auth';
+import { NextAuthTrialAbuseAdapter } from 'trial-abuse-guard/nextauth';
+
+const trialAbuseAdapter = new NextAuthTrialAbuseAdapter({
+  blockHighRisk: true,
+  blockThreshold: 80,
+  onUserBlocked: async (email, riskData) => {
+    console.log(`Blocked user: ${email} (Risk: ${riskData.overall})`);
+  }
+});
+
+export const { handlers, auth } = NextAuth(
+  trialAbuseAdapter.getNextAuthConfig({
+    providers: [/* your providers */],
+    // Your existing config is preserved and enhanced
+  })
+);
+```
+
+**Features:**
+- 🚫 Automatically blocks high-risk sign-ups
+- ⚠️ Flags suspicious users for review
+- 📊 Adds risk data to session and JWT
+- 🔧 Preserves all existing NextAuth configuration
+- 🎯 Custom callbacks for handling blocked/flagged users
+
+### Clerk Integration
+
+```javascript
+// Webhook handler: app/api/webhooks/clerk/route.ts
+import { ClerkTrialAbuseAdapter } from 'trial-abuse-guard/clerk';
+
+const clerkAdapter = new ClerkTrialAbuseAdapter({
+  blockHighRisk: true,
+  clerkSecretKey: process.env.CLERK_SECRET_KEY,
+  onUserBlocked: async (email, riskData) => {
+    // User is automatically deleted from Clerk
+    console.log(`Blocked and deleted: ${email}`);
+  }
+});
+
+export async function POST(request) {
+  const webhookHandler = clerkAdapter.createWebhookHandler();
+  return Response.json(await webhookHandler(request));
+}
+```
+
+**Features:**
+- 🗑️ Automatically deletes high-risk users
+- 🏷️ Adds risk metadata to user profiles
+- 🛡️ Middleware for route protection
+- 📊 Admin dashboard integration
+- ⚡ Real-time risk assessment
+
+### Pre-signup Risk Checking
+
+```javascript
+// Check risk before allowing signup
+const { allowed, risk, action } = await clerkAdapter.preSignUpCheck(
+  email, 
+  ipAddress
+);
+
+if (!allowed) {
+  return res.status(403).json({ error: 'Sign-up not available' });
+}
+```
+
 ## ⚙️ Configuration
 
 ```javascript

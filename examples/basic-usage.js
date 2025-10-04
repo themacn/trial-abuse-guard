@@ -16,7 +16,29 @@ async function basicExample() {
     overallRisk: result.overall,
     recommendation: result.recommendation,
     riskLevel: guard.getRiskLevel(result.overall),
-    details: result.details
+    details: result.details,
+    factors: {
+      emailSimilarity: {
+        score: result.factors.emailSimilarity.score,
+        detected: result.factors.emailSimilarity.detected,
+        details: result.factors.emailSimilarity.details
+      },
+      tempEmail: {
+        score: result.factors.tempEmail.score,
+        detected: result.factors.tempEmail.detected,
+        details: result.factors.tempEmail.details
+      },
+      ipRisk: {
+        score: result.factors.ipRisk.score,
+        detected: result.factors.ipRisk.detected,
+        details: result.factors.ipRisk.details
+      },
+      vpnDetection: {
+        score: result.factors.vpnDetection.score,
+        detected: result.factors.vpnDetection.detected,
+        details: result.factors.vpnDetection.details
+      }
+    }
   });
 
   // Handle based on risk level

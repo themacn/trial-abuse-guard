@@ -1,26 +1,23 @@
-// Static list of common disposable email domains
-const disposableEmailDomains = [
-  '10minutemail.com', '20minutemail.com', '33mail.com', 'guerrillamail.com',
-  'mailinator.com', 'tempmail.org', 'temp-mail.org', 'throwaway.email',
-  'yopmail.com', 'maildrop.cc', 'sharklasers.com', 'getnada.com',
-  'tempail.com', 'dispostable.com', 'fakeinbox.com', 'spambox.us',
-  'tempr.email', 'mohmal.com', 'emkei.cf', 'crazymailing.com'
-];
 import { TrialAbuseConfig } from '../types';
+import { TempDomainService, TempDomainConfig } from '../services/TempDomainService';
 
 export class TempEmailDetector {
   private config: TrialAbuseConfig;
-  private disposableDomains: Set<string>;
+  private domainService: TempDomainService;
   private suspiciousPatterns: RegExp[];
 
   constructor(config: TrialAbuseConfig) {
     this.config = config;
     
-    // Load disposable email domains
-    this.disposableDomains = new Set([
-      ...disposableEmailDomains,
-      ...(config.customDisposableDomains || [])
-    ]);
+    // Initialize domain service with configuration
+    const domainConfig: TempDomainConfig = {
+      customDomains: config.customDisposableDomains || [],
+      autoUpdate: config.tempEmailAutoUpdate !== false, // Default to true
+      updateIntervalHours: config.tempEmailUpdateInterval || 24,
+      localStoragePath: config.tempEmailStoragePath
+    };
+    
+    this.domainService = new TempDomainService(domainConfig);
 
     // Common patterns for temporary emails
     this.suspiciousPatterns = [
@@ -46,7 +43,7 @@ export class TempEmailDetector {
     const localPart = this.extractLocalPart(email);
 
     // Check against known disposable domains
-    if (this.disposableDomains.has(domain)) {
+    if (this.domainService.isDomainTemporary(domain)) {
       return true;
     }
 
@@ -148,16 +145,70 @@ export class TempEmailDetector {
   /**
    * Add custom disposable domains to the detector
    */
-  addCustomDisposableDomains(domains: string[]): void {
-    domains.forEach(domain => {
-      this.disposableDomains.add(domain.toLowerCase());
-    });
+  async addCustomDisposableDomains(domains: string[]): Promise<void> {
+    await this.domainService.addDomains(domains);
+  }
+
+  /**
+   * Remove domains from the disposable list
+   */
+  async removeDisposableDomains(domains: string[]): Promise<void> {
+    await this.domainService.removeDomains(domains);
   }
 
   /**
    * Check if a domain is in the disposable list
    */
   isDomainDisposable(domain: string): boolean {
-    return this.disposableDomains.has(domain.toLowerCase());
+    return this.domainService.isDomainTemporary(domain);
+  }
+
+  /**
+   * Get all disposable domains
+   */
+  getAllDisposableDomains(): string[] {
+    return this.domainService.getAllDomains();
+  }
+
+  /**
+   * Get domain statistics
+   */
+  getDomainStats() {
+    return this.domainService.getStats();
+  }
+
+  /**
+   * Force update domain list from external sources
+   */
+  async updateDomains(): Promise<void> {
+    await this.domainService.forceUpdate();
+  }
+
+  /**
+   * Search domains by pattern
+   */
+  searchDomains(pattern: string): string[] {
+    return this.domainService.searchDomains(pattern);
+  }
+
+  /**
+   * Export domains to file
+   */
+  async exportDomains(filePath: string, format: 'json' | 'txt' = 'json'): Promise<void> {
+    await this.domainService.exportDomains(filePath, format);
+  }
+
+  /**
+   * Import domains from file
+   */
+  async importDomains(filePath: string): Promise<number> {
+    return await this.domainService.importDomains(filePath);
+  }
+
+  /**
+   * Reset to default domain list
+   */
+  async resetDomains(): Promise<void> {
+    await this.domainService.reset();
   }
 }

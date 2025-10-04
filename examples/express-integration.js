@@ -122,21 +122,28 @@ app.post('/api/start-trial', checkTrialAbuse, async (req, res) => {
   });
 });
 
-// Admin endpoint to check user risk
+// Admin endpoint to check user risk (requires storage adapter with history support)
 app.get('/api/admin/user/:email/risk', async (req, res) => {
   try {
     const { email } = req.params;
-    
-    // Get recent activity for this email
-    const history = await guard.config.storageAdapter.getUserHistory(email, 5);
-    
-    res.json({
-      email,
-      history: history.map(h => ({
+
+    // Note: This endpoint requires a storage adapter that supports history
+    // (like MongoStorageAdapter). In-memory adapter doesn't support this.
+    const history = [];
+
+    if (guard.config.storageAdapter && typeof guard.config.storageAdapter.getUserHistory === 'function') {
+      const userHistory = await guard.config.storageAdapter.getUserHistory(email, 5);
+      history.push(...userHistory.map(h => ({
         ipAddress: h.ipAddress,
         timestamp: h.timestamp,
         userAgent: h.userAgent
-      }))
+      })));
+    }
+
+    res.json({
+      email,
+      history,
+      note: history.length === 0 ? 'History not available with current storage adapter' : undefined
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

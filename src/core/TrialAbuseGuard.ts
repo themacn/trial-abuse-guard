@@ -27,6 +27,9 @@ export class TrialAbuseGuard {
       ipCheck: true,
       vpnCheck: true,
       customDisposableDomains: [],
+      tempEmailAutoUpdate: false,
+      tempEmailUpdateInterval: 24,
+      tempEmailStoragePath: './temp-domains.json',
       apiKeys: {},
       storageAdapter: new InMemoryStorageAdapter(),
       ...config
@@ -220,6 +223,69 @@ export class TrialAbuseGuard {
     if (score >= 60) return 'high';
     if (score >= 30) return 'medium';
     return 'low';
+  }
+
+  /**
+   * Get temp email detector for domain management
+   */
+  getTempEmailDetector(): TempEmailDetector {
+    return this.tempEmailDetector;
+  }
+
+  /**
+   * Add domains to temp email blacklist
+   */
+  async addTempEmailDomains(domains: string[]): Promise<void> {
+    await this.tempEmailDetector.addCustomDisposableDomains(domains);
+  }
+
+  /**
+   * Remove domains from temp email blacklist
+   */
+  async removeTempEmailDomains(domains: string[]): Promise<void> {
+    await this.tempEmailDetector.removeDisposableDomains(domains);
+  }
+
+  /**
+   * Get all temp email domains
+   */
+  getTempEmailDomains(): string[] {
+    return this.tempEmailDetector.getAllDisposableDomains();
+  }
+
+  /**
+   * Get temp email domain statistics
+   */
+  getTempEmailStats() {
+    return this.tempEmailDetector.getDomainStats();
+  }
+
+  /**
+   * Force update temp email domains from external sources
+   */
+  async updateTempEmailDomains(): Promise<void> {
+    await this.tempEmailDetector.updateDomains();
+  }
+
+  /**
+   * Search temp email domains
+   */
+  searchTempEmailDomains(pattern: string): string[] {
+    return this.tempEmailDetector.searchDomains(pattern);
+  }
+
+  /**
+   * Export temp email domains to file
+   */
+  async exportTempEmailDomains(filePath: string, format: 'json' | 'txt' = 'json'): Promise<void> {
+    await this.tempEmailDetector.exportDomains(filePath, format);
+  }
+
+  /**
+   * Import temp email domains from file
+   */
+  async importTempEmailDomains(filePath: string): Promise<number> {
+    return await this.tempEmailDetector.importDomains(filePath);
   }
 }
 
